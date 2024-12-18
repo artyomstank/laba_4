@@ -74,7 +74,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 # Обработка кнопок
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    if query.data == "/city":
+        await query.edit_message_text("Введите название города:")
+        context.user_data["awaiting_city_name"] = True
+    elif query.data == "/last_city":
+        last_city = load_last_city()
+        if last_city:
+            city_info = await fetch_city_info(last_city)
+            await query.edit_message_text(city_info)
+        else:
+            await query.edit_message_text("Информация о последнем городе отсутствует.")
 
+# Команда /city
 async def city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data["awaiting_city_name"] = True
     await update.message.reply_text("Введите название города:")
