@@ -5,7 +5,6 @@ import json
 
 from secret import *  # TELEGRAM_TOKEN, WEATHER_API_KEY, GEODB_API_KEY, GEODB_API_URL, WEATHER_API_URL
 
-# Загрузка и сохранение последнего города
 def load_last_city():
     try:
         with open("last_city.json", "r", encoding="utf-8") as file:
@@ -18,7 +17,6 @@ def save_last_city(city_name):
     with open("last_city.json", "w", encoding="utf-8") as file:
         json.dump({"last_city": city_name}, file)
 
-# Вспомогательная функция для получения информации о городе
 async def fetch_city_info(city_name: str) -> str:
     try:
         # Погода
@@ -93,7 +91,6 @@ async def city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data["awaiting_city_name"] = True
     await update.message.reply_text("Введите название города:")
 
-# Команда /last_city
 async def last_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     last_city = load_last_city()
     if last_city:
@@ -102,7 +99,6 @@ async def last_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         await update.message.reply_text("Информация о последнем городе отсутствует.")
 
-# Команда /info
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help_text = (
         "/start - Приветствие и краткая информация о боте.\n"
@@ -112,7 +108,6 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
     await update.message.reply_text(help_text)
 
-# Обработка ввода названия города
 async def handle_city_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.user_data.get("awaiting_city_name"):
         city_name = update.message.text
